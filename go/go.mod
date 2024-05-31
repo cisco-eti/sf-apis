@@ -1,4 +1,4 @@
-module github.com/sysflow-telemetry/sf-apis/go
+module github.com/cisco-eti/sf-apis/go
 
 go 1.19
 

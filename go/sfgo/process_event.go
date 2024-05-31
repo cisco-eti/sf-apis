@@ -24,9 +24,15 @@ type ProcessEvent struct {
 	Args []string `json:"args"`
 
 	Ret int32 `json:"ret"`
+
+	TCapPermitted string `json:"tCapPermitted"`
+
+	TCapEffective string `json:"tCapEffective"`
+
+	TCapInheritable string `json:"tCapInheritable"`
 }
 
-const ProcessEventAvroCRC64Fingerprint = "\xa3\x98\xb0\xfe\x1do+\xd9"
+const ProcessEventAvroCRC64Fingerprint = "\x13\x14\xa7N=\xb1\xbe\x9a"
 
 func NewProcessEvent() *ProcessEvent {
 	return &ProcessEvent{}
@@ -87,6 +93,18 @@ func writeProcessEvent(r *ProcessEvent, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	err = vm.WriteString(r.TCapPermitted, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapEffective, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapInheritable, w)
+	if err != nil {
+		return err
+	}
 	return err
 }
 
@@ -95,7 +113,7 @@ func (r *ProcessEvent) Serialize(w io.Writer) error {
 }
 
 func (r *ProcessEvent) Schema() string {
-	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"args\",\"type\":{\"items\":\"string\",\"type\":\"array\"}},{\"name\":\"ret\",\"type\":\"int\"}],\"name\":\"sysflow.event.ProcessEvent\",\"type\":\"record\"}"
+	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"args\",\"type\":{\"items\":\"string\",\"type\":\"array\"}},{\"name\":\"ret\",\"type\":\"int\"},{\"name\":\"tCapPermitted\",\"type\":\"string\"},{\"name\":\"tCapEffective\",\"type\":\"string\"},{\"name\":\"tCapInheritable\",\"type\":\"string\"}],\"name\":\"sysflow.event.ProcessEvent\",\"type\":\"record\"}"
 }
 
 func (r *ProcessEvent) SchemaName() string {
@@ -129,6 +147,12 @@ func (r *ProcessEvent) Get(i int) types.Field {
 		return &ArrayStringWrapper{Target: &r.Args}
 	case 5:
 		return &types.Int{Target: &r.Ret}
+	case 6:
+		return &types.String{Target: &r.TCapPermitted}
+	case 7:
+		return &types.String{Target: &r.TCapEffective}
+	case 8:
+		return &types.String{Target: &r.TCapInheritable}
 	}
 	panic("Unknown field index")
 }

@@ -19,6 +19,12 @@ type NetworkFlow struct {
 
 	Tid int64 `json:"tid"`
 
+	TCapPermitted string `json:"tCapPermitted"`
+
+	TCapEffective string `json:"tCapEffective"`
+
+	TCapInheritable string `json:"tCapInheritable"`
+
 	OpFlags int32 `json:"opFlags"`
 
 	EndTs int64 `json:"endTs"`
@@ -44,7 +50,7 @@ type NetworkFlow struct {
 	NumWSendBytes int64 `json:"numWSendBytes"`
 }
 
-const NetworkFlowAvroCRC64Fingerprint = "K\xd5\x14\xceg\xe2 \xd3"
+const NetworkFlowAvroCRC64Fingerprint = "B\x0f\x12\x9f\xa4\xe4\xad\xde"
 
 func NewNetworkFlow() *NetworkFlow {
 	return &NetworkFlow{}
@@ -90,6 +96,18 @@ func writeNetworkFlow(r *NetworkFlow, w io.Writer) error {
 		return err
 	}
 	err = vm.WriteLong(r.Tid, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapPermitted, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapEffective, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapInheritable, w)
 	if err != nil {
 		return err
 	}
@@ -149,7 +167,7 @@ func (r *NetworkFlow) Serialize(w io.Writer) error {
 }
 
 func (r *NetworkFlow) Schema() string {
-	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"endTs\",\"type\":\"long\"},{\"name\":\"sip\",\"type\":\"int\"},{\"name\":\"sport\",\"type\":\"int\"},{\"name\":\"dip\",\"type\":\"int\"},{\"name\":\"dport\",\"type\":\"int\"},{\"name\":\"proto\",\"type\":\"int\"},{\"name\":\"fd\",\"type\":\"int\"},{\"name\":\"numRRecvOps\",\"type\":\"long\"},{\"name\":\"numWSendOps\",\"type\":\"long\"},{\"name\":\"numRRecvBytes\",\"type\":\"long\"},{\"name\":\"numWSendBytes\",\"type\":\"long\"}],\"name\":\"sysflow.flow.NetworkFlow\",\"type\":\"record\"}"
+	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"tCapPermitted\",\"type\":\"string\"},{\"name\":\"tCapEffective\",\"type\":\"string\"},{\"name\":\"tCapInheritable\",\"type\":\"string\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"endTs\",\"type\":\"long\"},{\"name\":\"sip\",\"type\":\"int\"},{\"name\":\"sport\",\"type\":\"int\"},{\"name\":\"dip\",\"type\":\"int\"},{\"name\":\"dport\",\"type\":\"int\"},{\"name\":\"proto\",\"type\":\"int\"},{\"name\":\"fd\",\"type\":\"int\"},{\"name\":\"numRRecvOps\",\"type\":\"long\"},{\"name\":\"numWSendOps\",\"type\":\"long\"},{\"name\":\"numRRecvBytes\",\"type\":\"long\"},{\"name\":\"numWSendBytes\",\"type\":\"long\"}],\"name\":\"sysflow.flow.NetworkFlow\",\"type\":\"record\"}"
 }
 
 func (r *NetworkFlow) SchemaName() string {
@@ -176,28 +194,34 @@ func (r *NetworkFlow) Get(i int) types.Field {
 	case 2:
 		return &types.Long{Target: &r.Tid}
 	case 3:
-		return &types.Int{Target: &r.OpFlags}
+		return &types.String{Target: &r.TCapPermitted}
 	case 4:
-		return &types.Long{Target: &r.EndTs}
+		return &types.String{Target: &r.TCapEffective}
 	case 5:
-		return &types.Int{Target: &r.Sip}
+		return &types.String{Target: &r.TCapInheritable}
 	case 6:
-		return &types.Int{Target: &r.Sport}
+		return &types.Int{Target: &r.OpFlags}
 	case 7:
-		return &types.Int{Target: &r.Dip}
+		return &types.Long{Target: &r.EndTs}
 	case 8:
-		return &types.Int{Target: &r.Dport}
+		return &types.Int{Target: &r.Sip}
 	case 9:
-		return &types.Int{Target: &r.Proto}
+		return &types.Int{Target: &r.Sport}
 	case 10:
-		return &types.Int{Target: &r.Fd}
+		return &types.Int{Target: &r.Dip}
 	case 11:
-		return &types.Long{Target: &r.NumRRecvOps}
+		return &types.Int{Target: &r.Dport}
 	case 12:
-		return &types.Long{Target: &r.NumWSendOps}
+		return &types.Int{Target: &r.Proto}
 	case 13:
-		return &types.Long{Target: &r.NumRRecvBytes}
+		return &types.Int{Target: &r.Fd}
 	case 14:
+		return &types.Long{Target: &r.NumRRecvOps}
+	case 15:
+		return &types.Long{Target: &r.NumWSendOps}
+	case 16:
+		return &types.Long{Target: &r.NumRRecvBytes}
+	case 17:
 		return &types.Long{Target: &r.NumWSendBytes}
 	}
 	panic("Unknown field index")

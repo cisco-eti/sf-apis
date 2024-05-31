@@ -83,6 +83,15 @@
       "name" : "tid",
       "type" : "long"
     }, {
+      "name" : "tCapPermitted",
+      "type" : "string"
+    }, {
+      "name" : "tCapEffective",
+      "type" : "string"
+    }, {
+      "name" : "tCapInheritable",
+      "type" : "string"
+    }, {
       "name" : "opFlags",
       "type" : "int"
     }, {
@@ -132,6 +141,15 @@
     }, {
       "name" : "tid",
       "type" : "long"
+    }, {
+      "name" : "tCapPermitted",
+      "type" : "string"
+    }, {
+      "name" : "tCapEffective",
+      "type" : "string"
+    }, {
+      "name" : "tCapInheritable",
+      "type" : "string"
     }, {
       "name" : "opFlags",
       "type" : "int"
@@ -185,6 +203,15 @@
     }, {
       "name" : "ret",
       "type" : "int"
+    }, {
+      "name" : "tCapPermitted",
+      "type" : "string"
+    }, {
+      "name" : "tCapEffective",
+      "type" : "string"
+    }, {
+      "name" : "tCapInheritable",
+      "type" : "string"
     } ]
   }, {
     "type" : "record",
@@ -220,6 +247,15 @@
     }, {
       "name" : "ret",
       "type" : "int"
+    }, {
+      "name" : "tCapPermitted",
+      "type" : "string"
+    }, {
+      "name" : "tCapEffective",
+      "type" : "string"
+    }, {
+      "name" : "tCapInheritable",
+      "type" : "string"
     } ]
   }, {
     "type" : "record",
@@ -243,6 +279,15 @@
     }, {
       "name" : "ret",
       "type" : "int"
+    }, {
+      "name" : "tCapPermitted",
+      "type" : "string"
+    }, {
+      "name" : "tCapEffective",
+      "type" : "string"
+    }, {
+      "name" : "tCapInheritable",
+      "type" : "string"
     }, {
       "name" : "newFileOID",
       "type" : [ "null", "sysflow.type.FOID" ]

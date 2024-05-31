@@ -26,6 +26,9 @@ record FileEvent {
   int opFlags;
   sysflow.type.FOID fileOID;
   int ret;
+  string tCapPermitted;
+  string tCapEffective;
+  string tCapInheritable;
   union{null, sysflow.type.FOID} newFileOID;
 }
 }

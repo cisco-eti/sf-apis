@@ -23,6 +23,9 @@ record NetworkFlow {
   sysflow.type.OID procOID; // host ID + monotonic process creation time + host PID
   long ts;
   long tid;
+  string tCapPermitted;
+  string tCapEffective;
+  string tCapInheritable;
   int opFlags;
   long endTs;
   int sip;

@@ -26,5 +26,8 @@ record ProcessEvent {
   int opFlags;
   array<string> args;
   int ret;
+  string tCapPermitted;
+  string tCapEffective;
+  string tCapInheritable;
 }
 }

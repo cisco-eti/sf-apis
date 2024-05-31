@@ -223,13 +223,19 @@ struct ProcessEvent {
     int32_t opFlags;
     std::vector<std::string > args;
     int32_t ret;
+    std::string tCapPermitted;
+    std::string tCapEffective;
+    std::string tCapInheritable;
     ProcessEvent() :
         procOID(OID()),
         ts(int64_t()),
         tid(int64_t()),
         opFlags(int32_t()),
         args(std::vector<std::string >()),
-        ret(int32_t())
+        ret(int32_t()),
+        tCapPermitted(std::string()),
+        tCapEffective(std::string()),
+        tCapInheritable(std::string())
         { }
 };
 
@@ -237,6 +243,9 @@ struct NetworkFlow {
     OID procOID;
     int64_t ts;
     int64_t tid;
+    std::string tCapPermitted;
+    std::string tCapEffective;
+    std::string tCapInheritable;
     int32_t opFlags;
     int64_t endTs;
     int32_t sip;
@@ -253,6 +262,9 @@ struct NetworkFlow {
         procOID(OID()),
         ts(int64_t()),
         tid(int64_t()),
+        tCapPermitted(std::string()),
+        tCapEffective(std::string()),
+        tCapInheritable(std::string()),
         opFlags(int32_t()),
         endTs(int64_t()),
         sip(int32_t()),
@@ -272,6 +284,9 @@ struct FileFlow {
     OID procOID;
     int64_t ts;
     int64_t tid;
+    std::string tCapPermitted;
+    std::string tCapEffective;
+    std::string tCapInheritable;
     int32_t opFlags;
     int32_t openFlags;
     int64_t endTs;
@@ -285,6 +300,9 @@ struct FileFlow {
         procOID(OID()),
         ts(int64_t()),
         tid(int64_t()),
+        tCapPermitted(std::string()),
+        tCapEffective(std::string()),
+        tCapInheritable(std::string()),
         opFlags(int32_t()),
         openFlags(int32_t()),
         endTs(int64_t()),
@@ -323,6 +341,9 @@ struct FileEvent {
     int32_t opFlags;
     std::array<uint8_t, 20> fileOID;
     int32_t ret;
+    std::string tCapPermitted;
+    std::string tCapEffective;
+    std::string tCapInheritable;
     newFileOID_t newFileOID;
     FileEvent() :
         procOID(OID()),
@@ -331,6 +352,9 @@ struct FileEvent {
         opFlags(int32_t()),
         fileOID(std::array<uint8_t, 20>()),
         ret(int32_t()),
+        tCapPermitted(std::string()),
+        tCapEffective(std::string()),
+        tCapInheritable(std::string()),
         newFileOID(newFileOID_t())
         { }
 };
@@ -346,6 +370,9 @@ struct NetworkEvent {
     int32_t dport;
     int32_t proto;
     int32_t ret;
+    std::string tCapPermitted;
+    std::string tCapEffective;
+    std::string tCapInheritable;
     NetworkEvent() :
         procOID(OID()),
         ts(int64_t()),
@@ -356,7 +383,10 @@ struct NetworkEvent {
         dip(int32_t()),
         dport(int32_t()),
         proto(int32_t()),
-        ret(int32_t())
+        ret(int32_t()),
+        tCapPermitted(std::string()),
+        tCapEffective(std::string()),
+        tCapInheritable(std::string())
         { }
 };
 
@@ -1197,6 +1227,9 @@ template<> struct codec_traits<sysflow::ProcessEvent> {
         avro::encode(e, v.opFlags);
         avro::encode(e, v.args);
         avro::encode(e, v.ret);
+        avro::encode(e, v.tCapPermitted);
+        avro::encode(e, v.tCapEffective);
+        avro::encode(e, v.tCapInheritable);
     }
     static void decode(Decoder& d, sysflow::ProcessEvent& v) {
         if (avro::ResolvingDecoder *rd =
@@ -1223,6 +1256,15 @@ template<> struct codec_traits<sysflow::ProcessEvent> {
                 case 5:
                     avro::decode(d, v.ret);
                     break;
+                case 6:
+                    avro::decode(d, v.tCapPermitted);
+                    break;
+                case 7:
+                    avro::decode(d, v.tCapEffective);
+                    break;
+                case 8:
+                    avro::decode(d, v.tCapInheritable);
+                    break;
                 default:
                     break;
                 }
@@ -1234,6 +1276,9 @@ template<> struct codec_traits<sysflow::ProcessEvent> {
             avro::decode(d, v.opFlags);
             avro::decode(d, v.args);
             avro::decode(d, v.ret);
+            avro::decode(d, v.tCapPermitted);
+            avro::decode(d, v.tCapEffective);
+            avro::decode(d, v.tCapInheritable);
         }
     }
 };
@@ -1243,6 +1288,9 @@ template<> struct codec_traits<sysflow::NetworkFlow> {
         avro::encode(e, v.procOID);
         avro::encode(e, v.ts);
         avro::encode(e, v.tid);
+        avro::encode(e, v.tCapPermitted);
+        avro::encode(e, v.tCapEffective);
+        avro::encode(e, v.tCapInheritable);
         avro::encode(e, v.opFlags);
         avro::encode(e, v.endTs);
         avro::encode(e, v.sip);
@@ -1273,39 +1321,48 @@ template<> struct codec_traits<sysflow::NetworkFlow> {
                     avro::decode(d, v.tid);
                     break;
                 case 3:
-                    avro::decode(d, v.opFlags);
+                    avro::decode(d, v.tCapPermitted);
                     break;
                 case 4:
-                    avro::decode(d, v.endTs);
+                    avro::decode(d, v.tCapEffective);
                     break;
                 case 5:
-                    avro::decode(d, v.sip);
+                    avro::decode(d, v.tCapInheritable);
                     break;
                 case 6:
-                    avro::decode(d, v.sport);
+                    avro::decode(d, v.opFlags);
                     break;
                 case 7:
-                    avro::decode(d, v.dip);
+                    avro::decode(d, v.endTs);
                     break;
                 case 8:
-                    avro::decode(d, v.dport);
+                    avro::decode(d, v.sip);
                     break;
                 case 9:
-                    avro::decode(d, v.proto);
+                    avro::decode(d, v.sport);
                     break;
                 case 10:
-                    avro::decode(d, v.fd);
+                    avro::decode(d, v.dip);
                     break;
                 case 11:
-                    avro::decode(d, v.numRRecvOps);
+                    avro::decode(d, v.dport);
                     break;
                 case 12:
-                    avro::decode(d, v.numWSendOps);
+                    avro::decode(d, v.proto);
                     break;
                 case 13:
-                    avro::decode(d, v.numRRecvBytes);
+                    avro::decode(d, v.fd);
                     break;
                 case 14:
+                    avro::decode(d, v.numRRecvOps);
+                    break;
+                case 15:
+                    avro::decode(d, v.numWSendOps);
+                    break;
+                case 16:
+                    avro::decode(d, v.numRRecvBytes);
+                    break;
+                case 17:
                     avro::decode(d, v.numWSendBytes);
                     break;
                 default:
@@ -1316,6 +1373,9 @@ template<> struct codec_traits<sysflow::NetworkFlow> {
             avro::decode(d, v.procOID);
             avro::decode(d, v.ts);
             avro::decode(d, v.tid);
+            avro::decode(d, v.tCapPermitted);
+            avro::decode(d, v.tCapEffective);
+            avro::decode(d, v.tCapInheritable);
             avro::decode(d, v.opFlags);
             avro::decode(d, v.endTs);
             avro::decode(d, v.sip);
@@ -1337,6 +1397,9 @@ template<> struct codec_traits<sysflow::FileFlow> {
         avro::encode(e, v.procOID);
         avro::encode(e, v.ts);
         avro::encode(e, v.tid);
+        avro::encode(e, v.tCapPermitted);
+        avro::encode(e, v.tCapEffective);
+        avro::encode(e, v.tCapInheritable);
         avro::encode(e, v.opFlags);
         avro::encode(e, v.openFlags);
         avro::encode(e, v.endTs);
@@ -1364,30 +1427,39 @@ template<> struct codec_traits<sysflow::FileFlow> {
                     avro::decode(d, v.tid);
                     break;
                 case 3:
-                    avro::decode(d, v.opFlags);
+                    avro::decode(d, v.tCapPermitted);
                     break;
                 case 4:
-                    avro::decode(d, v.openFlags);
+                    avro::decode(d, v.tCapEffective);
                     break;
                 case 5:
-                    avro::decode(d, v.endTs);
+                    avro::decode(d, v.tCapInheritable);
                     break;
                 case 6:
-                    avro::decode(d, v.fileOID);
+                    avro::decode(d, v.opFlags);
                     break;
                 case 7:
-                    avro::decode(d, v.fd);
+                    avro::decode(d, v.openFlags);
                     break;
                 case 8:
-                    avro::decode(d, v.numRRecvOps);
+                    avro::decode(d, v.endTs);
                     break;
                 case 9:
-                    avro::decode(d, v.numWSendOps);
+                    avro::decode(d, v.fileOID);
                     break;
                 case 10:
-                    avro::decode(d, v.numRRecvBytes);
+                    avro::decode(d, v.fd);
                     break;
                 case 11:
+                    avro::decode(d, v.numRRecvOps);
+                    break;
+                case 12:
+                    avro::decode(d, v.numWSendOps);
+                    break;
+                case 13:
+                    avro::decode(d, v.numRRecvBytes);
+                    break;
+                case 14:
                     avro::decode(d, v.numWSendBytes);
                     break;
                 default:
@@ -1398,6 +1470,9 @@ template<> struct codec_traits<sysflow::FileFlow> {
             avro::decode(d, v.procOID);
             avro::decode(d, v.ts);
             avro::decode(d, v.tid);
+            avro::decode(d, v.tCapPermitted);
+            avro::decode(d, v.tCapEffective);
+            avro::decode(d, v.tCapInheritable);
             avro::decode(d, v.opFlags);
             avro::decode(d, v.openFlags);
             avro::decode(d, v.endTs);
@@ -1450,6 +1525,9 @@ template<> struct codec_traits<sysflow::FileEvent> {
         avro::encode(e, v.opFlags);
         avro::encode(e, v.fileOID);
         avro::encode(e, v.ret);
+        avro::encode(e, v.tCapPermitted);
+        avro::encode(e, v.tCapEffective);
+        avro::encode(e, v.tCapInheritable);
         avro::encode(e, v.newFileOID);
     }
     static void decode(Decoder& d, sysflow::FileEvent& v) {
@@ -1478,6 +1556,15 @@ template<> struct codec_traits<sysflow::FileEvent> {
                     avro::decode(d, v.ret);
                     break;
                 case 6:
+                    avro::decode(d, v.tCapPermitted);
+                    break;
+                case 7:
+                    avro::decode(d, v.tCapEffective);
+                    break;
+                case 8:
+                    avro::decode(d, v.tCapInheritable);
+                    break;
+                case 9:
                     avro::decode(d, v.newFileOID);
                     break;
                 default:
@@ -1491,6 +1578,9 @@ template<> struct codec_traits<sysflow::FileEvent> {
             avro::decode(d, v.opFlags);
             avro::decode(d, v.fileOID);
             avro::decode(d, v.ret);
+            avro::decode(d, v.tCapPermitted);
+            avro::decode(d, v.tCapEffective);
+            avro::decode(d, v.tCapInheritable);
             avro::decode(d, v.newFileOID);
         }
     }
@@ -1508,6 +1598,9 @@ template<> struct codec_traits<sysflow::NetworkEvent> {
         avro::encode(e, v.dport);
         avro::encode(e, v.proto);
         avro::encode(e, v.ret);
+        avro::encode(e, v.tCapPermitted);
+        avro::encode(e, v.tCapEffective);
+        avro::encode(e, v.tCapInheritable);
     }
     static void decode(Decoder& d, sysflow::NetworkEvent& v) {
         if (avro::ResolvingDecoder *rd =
@@ -1546,6 +1639,15 @@ template<> struct codec_traits<sysflow::NetworkEvent> {
                 case 9:
                     avro::decode(d, v.ret);
                     break;
+                case 10:
+                    avro::decode(d, v.tCapPermitted);
+                    break;
+                case 11:
+                    avro::decode(d, v.tCapEffective);
+                    break;
+                case 12:
+                    avro::decode(d, v.tCapInheritable);
+                    break;
                 default:
                     break;
                 }
@@ -1561,6 +1663,9 @@ template<> struct codec_traits<sysflow::NetworkEvent> {
             avro::decode(d, v.dport);
             avro::decode(d, v.proto);
             avro::decode(d, v.ret);
+            avro::decode(d, v.tCapPermitted);
+            avro::decode(d, v.tCapEffective);
+            avro::decode(d, v.tCapInheritable);
         }
     }
 };
