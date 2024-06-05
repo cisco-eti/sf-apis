@@ -21,7 +21,7 @@
 package plugins
 
 import (
-	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
+	"github.com/cisco-eti/sf-apis/go/sfgo"
 )
 
 // CtxSysFlow defines a container for wrapping a SysFlow record with contextual information

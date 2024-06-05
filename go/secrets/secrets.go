@@ -26,7 +26,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
+	"github.com/cisco-eti/sf-apis/go/sfgo"
 )
 
 // Secrets stores a container secrets.

@@ -25,8 +25,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sysflow-telemetry/sf-apis/go/logger"
-	"github.com/sysflow-telemetry/sf-apis/go/sfgo"
+	"github.com/cisco-eti/sf-apis/go/logger"
+	"github.com/cisco-eti/sf-apis/go/sfgo"
 )
 
 // SFObjectConverter converts goavro schema objects into gogen objects.
