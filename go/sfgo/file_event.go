@@ -25,10 +25,16 @@ type FileEvent struct {
 
 	Ret int32 `json:"ret"`
 
+	TCapPermitted string `json:"tCapPermitted"`
+
+	TCapEffective string `json:"tCapEffective"`
+
+	TCapInheritable string `json:"tCapInheritable"`
+
 	NewFileOID *NewFileOIDUnion `json:"newFileOID"`
 }
 
-const FileEventAvroCRC64Fingerprint = "(̻5\x89\x16qK"
+const FileEventAvroCRC64Fingerprint = "\xfe\xe2\x06w\xb2W\"\x11"
 
 func NewFileEvent() *FileEvent {
 	return &FileEvent{}
@@ -89,6 +95,18 @@ func writeFileEvent(r *FileEvent, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	err = vm.WriteString(r.TCapPermitted, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapEffective, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapInheritable, w)
+	if err != nil {
+		return err
+	}
 	err = writeNewFileOIDUnion(r.NewFileOID, w)
 	if err != nil {
 		return err
@@ -101,7 +119,7 @@ func (r *FileEvent) Serialize(w io.Writer) error {
 }
 
 func (r *FileEvent) Schema() string {
-	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"fileOID\",\"type\":{\"name\":\"FOID\",\"namespace\":\"sysflow.type\",\"size\":20,\"type\":\"fixed\"}},{\"name\":\"ret\",\"type\":\"int\"},{\"name\":\"newFileOID\",\"type\":[\"null\",\"sysflow.type.FOID\"]}],\"name\":\"sysflow.event.FileEvent\",\"type\":\"record\"}"
+	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"fileOID\",\"type\":{\"name\":\"FOID\",\"namespace\":\"sysflow.type\",\"size\":20,\"type\":\"fixed\"}},{\"name\":\"ret\",\"type\":\"int\"},{\"name\":\"tCapPermitted\",\"type\":\"string\"},{\"name\":\"tCapEffective\",\"type\":\"string\"},{\"name\":\"tCapInheritable\",\"type\":\"string\"},{\"name\":\"newFileOID\",\"type\":[\"null\",\"sysflow.type.FOID\"]}],\"name\":\"sysflow.event.FileEvent\",\"type\":\"record\"}"
 }
 
 func (r *FileEvent) SchemaName() string {
@@ -134,6 +152,12 @@ func (r *FileEvent) Get(i int) types.Field {
 	case 5:
 		return &types.Int{Target: &r.Ret}
 	case 6:
+		return &types.String{Target: &r.TCapPermitted}
+	case 7:
+		return &types.String{Target: &r.TCapEffective}
+	case 8:
+		return &types.String{Target: &r.TCapInheritable}
+	case 9:
 		r.NewFileOID = NewNewFileOIDUnion()
 
 		return r.NewFileOID
@@ -149,7 +173,7 @@ func (r *FileEvent) SetDefault(i int) {
 
 func (r *FileEvent) NullField(i int) {
 	switch i {
-	case 6:
+	case 9:
 		r.NewFileOID = nil
 		return
 	}

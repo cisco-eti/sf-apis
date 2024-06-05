@@ -32,9 +32,15 @@ type NetworkEvent struct {
 	Proto int32 `json:"proto"`
 
 	Ret int32 `json:"ret"`
+
+	TCapPermitted string `json:"tCapPermitted"`
+
+	TCapEffective string `json:"tCapEffective"`
+
+	TCapInheritable string `json:"tCapInheritable"`
 }
 
-const NetworkEventAvroCRC64Fingerprint = "\xd9g\x01ј\xe1\xc2\xd0"
+const NetworkEventAvroCRC64Fingerprint = "\xaa\xaf\xe9b\t\xe5\xac\xec"
 
 func NewNetworkEvent() *NetworkEvent {
 	return &NetworkEvent{}
@@ -111,6 +117,18 @@ func writeNetworkEvent(r *NetworkEvent, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	err = vm.WriteString(r.TCapPermitted, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapEffective, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapInheritable, w)
+	if err != nil {
+		return err
+	}
 	return err
 }
 
@@ -119,7 +137,7 @@ func (r *NetworkEvent) Serialize(w io.Writer) error {
 }
 
 func (r *NetworkEvent) Schema() string {
-	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"sip\",\"type\":\"int\"},{\"name\":\"sport\",\"type\":\"int\"},{\"name\":\"dip\",\"type\":\"int\"},{\"name\":\"dport\",\"type\":\"int\"},{\"name\":\"proto\",\"type\":\"int\"},{\"name\":\"ret\",\"type\":\"int\"}],\"name\":\"sysflow.event.NetworkEvent\",\"type\":\"record\"}"
+	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"sip\",\"type\":\"int\"},{\"name\":\"sport\",\"type\":\"int\"},{\"name\":\"dip\",\"type\":\"int\"},{\"name\":\"dport\",\"type\":\"int\"},{\"name\":\"proto\",\"type\":\"int\"},{\"name\":\"ret\",\"type\":\"int\"},{\"name\":\"tCapPermitted\",\"type\":\"string\"},{\"name\":\"tCapEffective\",\"type\":\"string\"},{\"name\":\"tCapInheritable\",\"type\":\"string\"}],\"name\":\"sysflow.event.NetworkEvent\",\"type\":\"record\"}"
 }
 
 func (r *NetworkEvent) SchemaName() string {
@@ -159,6 +177,12 @@ func (r *NetworkEvent) Get(i int) types.Field {
 		return &types.Int{Target: &r.Proto}
 	case 9:
 		return &types.Int{Target: &r.Ret}
+	case 10:
+		return &types.String{Target: &r.TCapPermitted}
+	case 11:
+		return &types.String{Target: &r.TCapEffective}
+	case 12:
+		return &types.String{Target: &r.TCapInheritable}
 	}
 	panic("Unknown field index")
 }

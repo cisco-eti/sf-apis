@@ -23,6 +23,9 @@ record FileFlow {
   sysflow.type.OID procOID; // host ID + monotonic process creation time + host PID
   long ts;
   long tid;
+  string tCapPermitted;
+  string tCapEffective;
+  string tCapInheritable;
   int opFlags;
   int openFlags;
   long endTs;

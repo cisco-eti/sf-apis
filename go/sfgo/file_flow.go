@@ -19,6 +19,12 @@ type FileFlow struct {
 
 	Tid int64 `json:"tid"`
 
+	TCapPermitted string `json:"tCapPermitted"`
+
+	TCapEffective string `json:"tCapEffective"`
+
+	TCapInheritable string `json:"tCapInheritable"`
+
 	OpFlags int32 `json:"opFlags"`
 
 	OpenFlags int32 `json:"openFlags"`
@@ -38,7 +44,7 @@ type FileFlow struct {
 	NumWSendBytes int64 `json:"numWSendBytes"`
 }
 
-const FileFlowAvroCRC64Fingerprint = "\xb0\x9a\xb1-\x80\x85G\\"
+const FileFlowAvroCRC64Fingerprint = "\x94\x17\xa5\xa9\xd8\x05\xc1@"
 
 func NewFileFlow() *FileFlow {
 	return &FileFlow{}
@@ -87,6 +93,18 @@ func writeFileFlow(r *FileFlow, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	err = vm.WriteString(r.TCapPermitted, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapEffective, w)
+	if err != nil {
+		return err
+	}
+	err = vm.WriteString(r.TCapInheritable, w)
+	if err != nil {
+		return err
+	}
 	err = vm.WriteInt(r.OpFlags, w)
 	if err != nil {
 		return err
@@ -131,7 +149,7 @@ func (r *FileFlow) Serialize(w io.Writer) error {
 }
 
 func (r *FileFlow) Schema() string {
-	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"openFlags\",\"type\":\"int\"},{\"name\":\"endTs\",\"type\":\"long\"},{\"name\":\"fileOID\",\"type\":{\"name\":\"FOID\",\"namespace\":\"sysflow.type\",\"size\":20,\"type\":\"fixed\"}},{\"name\":\"fd\",\"type\":\"int\"},{\"name\":\"numRRecvOps\",\"type\":\"long\"},{\"name\":\"numWSendOps\",\"type\":\"long\"},{\"name\":\"numRRecvBytes\",\"type\":\"long\"},{\"name\":\"numWSendBytes\",\"type\":\"long\"}],\"name\":\"sysflow.flow.FileFlow\",\"type\":\"record\"}"
+	return "{\"fields\":[{\"name\":\"procOID\",\"type\":{\"fields\":[{\"name\":\"createTS\",\"type\":\"long\"},{\"name\":\"hpid\",\"type\":\"long\"}],\"name\":\"OID\",\"namespace\":\"sysflow.type\",\"type\":\"record\"}},{\"name\":\"ts\",\"type\":\"long\"},{\"name\":\"tid\",\"type\":\"long\"},{\"name\":\"tCapPermitted\",\"type\":\"string\"},{\"name\":\"tCapEffective\",\"type\":\"string\"},{\"name\":\"tCapInheritable\",\"type\":\"string\"},{\"name\":\"opFlags\",\"type\":\"int\"},{\"name\":\"openFlags\",\"type\":\"int\"},{\"name\":\"endTs\",\"type\":\"long\"},{\"name\":\"fileOID\",\"type\":{\"name\":\"FOID\",\"namespace\":\"sysflow.type\",\"size\":20,\"type\":\"fixed\"}},{\"name\":\"fd\",\"type\":\"int\"},{\"name\":\"numRRecvOps\",\"type\":\"long\"},{\"name\":\"numWSendOps\",\"type\":\"long\"},{\"name\":\"numRRecvBytes\",\"type\":\"long\"},{\"name\":\"numWSendBytes\",\"type\":\"long\"}],\"name\":\"sysflow.flow.FileFlow\",\"type\":\"record\"}"
 }
 
 func (r *FileFlow) SchemaName() string {
@@ -158,22 +176,28 @@ func (r *FileFlow) Get(i int) types.Field {
 	case 2:
 		return &types.Long{Target: &r.Tid}
 	case 3:
-		return &types.Int{Target: &r.OpFlags}
+		return &types.String{Target: &r.TCapPermitted}
 	case 4:
-		return &types.Int{Target: &r.OpenFlags}
+		return &types.String{Target: &r.TCapEffective}
 	case 5:
-		return &types.Long{Target: &r.EndTs}
+		return &types.String{Target: &r.TCapInheritable}
 	case 6:
-		return &FOIDWrapper{Target: &r.FileOID}
+		return &types.Int{Target: &r.OpFlags}
 	case 7:
-		return &types.Int{Target: &r.Fd}
+		return &types.Int{Target: &r.OpenFlags}
 	case 8:
-		return &types.Long{Target: &r.NumRRecvOps}
+		return &types.Long{Target: &r.EndTs}
 	case 9:
-		return &types.Long{Target: &r.NumWSendOps}
+		return &FOIDWrapper{Target: &r.FileOID}
 	case 10:
-		return &types.Long{Target: &r.NumRRecvBytes}
+		return &types.Int{Target: &r.Fd}
 	case 11:
+		return &types.Long{Target: &r.NumRRecvOps}
+	case 12:
+		return &types.Long{Target: &r.NumWSendOps}
+	case 13:
+		return &types.Long{Target: &r.NumRRecvBytes}
+	case 14:
 		return &types.Long{Target: &r.NumWSendBytes}
 	}
 	panic("Unknown field index")

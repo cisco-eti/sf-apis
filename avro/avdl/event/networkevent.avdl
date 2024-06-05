@@ -30,5 +30,8 @@ record NetworkEvent {
   int dport;
   int proto;
   int ret;
+  string tCapPermitted;
+  string tCapEffective;
+  string tCapInheritable;
 }
 }

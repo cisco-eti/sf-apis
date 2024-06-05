@@ -34,5 +34,14 @@
   }, {
     "name" : "ret",
     "type" : "int"
+  }, {
+    "name" : "tCapPermitted",
+    "type" : "string"
+  }, {
+    "name" : "tCapEffective",
+    "type" : "string"
+  }, {
+    "name" : "tCapInheritable",
+    "type" : "string"
   } ]
 }
